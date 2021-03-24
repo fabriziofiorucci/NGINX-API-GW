@@ -4,32 +4,32 @@
 
 The code here is based on https://docs.nginx.com/nginx/deployment-guides/single-sign-on/
 
-The original deployment guide focuses on FQDN-based OIDC idP selection, this repository provides a number of changes and enhancements to support dynamic multiple idPs based on the URI, authorization and rewriting.
+The original deployment guide focuses on FQDN-based OIDC IdP selection, this repository provides a number of changes and enhancements to support dynamic multiple IdPs based on the URI, authorization and rewriting.
 
 This supports deployments where all published REST APIs share a common FQDN (ie. http(s)://api.ff.lan/) and must be handled based on the first URI token, that is:
 
 ```
-http://api.ff.lan/testapi-1/getCustomer -> this gets authenticated by idP #1
-http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by iDP #2
+http://api.ff.lan/testapi-1/getCustomer -> this gets authenticated by IdP #1
+http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 ```
 
 ## Current and upcoming features
 
-- [X] per-URI OIDC idP selection (endpoints, client id, client key) based on NGINX "maps"
+- [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
 
 - [ ] URI rewriting support
 - [ ] per-REST API function HTTP method filtering/ACL
-- [ ] per-URI OIDC idP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
-- [ ] per-URI OIDC idP selection (endpoints, client id, client key) based on external keyval backend
+- [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
+- [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on external keyval backend
 
 
 ## How to deploy
 
-### Configure idPs
+### Configure IdPs
 
-On the idP side a client must be configured, with the appropriate redirect URIs:
+On the IdP side a client must be configured, with the appropriate redirect URIs:
 
-- testapi-1 idP - redirect_uri: http://api.ff.lan:80/testapi-1/*
+- testapi-1 IdP - redirect_uri: http://api.ff.lan:80/testapi-1/*
 - client-2 - redirect_uri: http://api.ff.lan:80/testapi-2/*
 
 
@@ -65,60 +65,65 @@ cd testapi-2
 
 ### Perform a full cleanup
 
-By default this repo creates a "nginx-apigw" namespace where everything is deployed
+By default this repo creates a "nginx-apigw" namespace where everything is deployed.
 
+- Move to the manifest dir
 ```
 cd manifests
+```
+
+- Perform a full cleanup
+```
 kubectl delete -f .
 ```
 
 ### Start the two test APIs
 
+- Namespace creation
 ```
-# Namespace creation
 kubectl apply -f 0.ns.yaml
+```
 
-# Sample APIs startup
+- Sample APIs startup
+```
 kubectl apply -f 1.sample_apis.yaml
 ```
 
 ### Create NGINX ConfigMaps
 
+- nginx.conf
 ```
-# Default nginx.conf
 kubectl apply -f 2.nginx.conf.yaml 
+```
 
-# NGINX-to-upstreams configuration
+- NGINX-to-upstreams configuration
+```
 kubectl apply -f 3.frontend.conf.yaml
+```
 
-# Javascript OIDC code
+- Javascript OIDC code
+```
 kubectl apply -f 4.openid_connect.js.yaml
+```
 
-# Internal OIDC locations
-#
-# Update the resolver line
-# resolver 192.168.1.13; # For DNS lookup of IdP endpoints
-#
+- Internal OIDC locations: the "resolver" line must be changed for DNS lookup of IdP endpoint
+```
 kubectl apply -f 5.openid_connect.server_conf.yaml
+```
 
-# Configure keyval maps
+- Configure keyval maps in 6.openid_connect_configuration.conf.yaml and then apply it
+```
 kubectl apply -f 6.openid_connect_configuration.conf.yaml
 ```
 
-### Deploy the NGINX Plus API Gateway instance
-
+- Deploy the NGINX Plus API Gateway instance
 ```
-# NGINX Plus API Gateway
 kubectl apply -f 7.nginx-apigw.yaml
 ```
 
 ### Test!
 
 ```
-# API test
-#
-# curl -i -X GET http://api.ff.lan/testapi-1/tasks
-# curl -i -X GET http://api.ff.lan/testapi-2/tasks
-#
-#
+curl -i -X GET http://api.ff.lan/testapi-1/tasks
+curl -i -X GET http://api.ff.lan/testapi-2/tasks
 ```
