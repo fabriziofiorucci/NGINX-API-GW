@@ -13,6 +13,10 @@ http://api.ff.lan/testapi-1/getCustomer -> this gets authenticated by IdP #1
 http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 ```
 
+## Prerequisites
+
+NGINX Plus must be built with javascript support. This repo can run on Kubernetes and Openshift.
+
 ## Current and upcoming features
 
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
