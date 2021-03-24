@@ -37,7 +37,7 @@ http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 On the IdP side a client must be configured, with the appropriate redirect URIs:
 
 - testapi-1 IdP - redirect_uri: http://api.ff.lan:80/testapi-1/*
-- client-2 - redirect_uri: http://api.ff.lan:80/testapi-2/*
+- testapi-2 IdP - redirect_uri: http://api.ff.lan:80/testapi-2/*
 
 
 ### Build and deploy up the first test api
