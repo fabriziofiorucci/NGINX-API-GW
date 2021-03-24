@@ -15,7 +15,9 @@ http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 
 ## Prerequisites
 
-NGINX Plus must be built with javascript support. This repo can run on Kubernetes and Openshift.
+- a Kubernetes or Openshift cluster
+- a private registry to push the NGINX Plus image and the test api images
+- NGINX Plus must be built with javascript support
 
 ## Current and upcoming features
 
