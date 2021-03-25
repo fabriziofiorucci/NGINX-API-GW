@@ -56,10 +56,10 @@ data:
         default "24o8ugerlkvsjm43iumfoidsjklfjs";
     }
 
-    # Per-URI allowed HTTP methods
+    # Per-URI allowed HTTP methods - blank delimited
     map $uri $apigw_allowed_http_methods {
         "~/testapi-1/" "GET";
-        "~/testapi-2/" "DELETE";
+        "~/testapi-2/" "GET DELETE";
         default 0;
     }
 
