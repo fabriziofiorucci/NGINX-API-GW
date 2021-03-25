@@ -18,14 +18,14 @@ http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 - a Kubernetes or Openshift cluster
 - a private registry to push the NGINX Plus image and the test api images
 - at least one OIDC IdP (like Keycloak, Okta, MS ADFS, etc)
-- NGINX Plus must be built with javascript support
+- the NGINX Plus image must be built with support for javascript (nginx-plus-module-njs) and lua (nginx-plus-module-lua)
 
 ## Current and upcoming features
 
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
+- [X] per-URI/per-REST API function HTTP method filtering
 
 - [ ] URI rewriting support
-- [ ] per-REST API function HTTP method filtering/ACL
 - [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
 - [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on external keyval backend
 

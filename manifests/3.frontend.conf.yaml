@@ -30,6 +30,7 @@ data:
         server_name api.ff.lan;
         
         location "~/(.*)/(.*)$" {
+            set $app_name $1;
             # This site is protected with OpenID Connect
             auth_jwt "" token=$session_jwt;
             #error_page 401 = @do_oidc_flow;
@@ -41,8 +42,17 @@ data:
             # Successfully authenticated users are proxied to the backend,
             # with 'sub' claim passed as HTTP header
             proxy_set_header username $jwt_claim_sub;
-            proxy_pass http://$1; # The backend site/app
+
+            # HTTP Method check
+            access_by_lua_block {
+              if not string.match(ngx.var.apigw_allowed_http_methods,ngx.var.request_method) then
+                ngx.exit(ngx.HTTP_FORBIDDEN);
+              end
+            }
+            #
+
+            proxy_pass http://$app_name; # The backend site/app
             
-            access_log /var/log/nginx/$1-access.log main_jwt;
+            access_log /var/log/nginx/frontend-access.log main_jwt;
         }
     }

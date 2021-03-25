@@ -26,8 +26,8 @@ data:
     }
     
     map $uri $oidc_client {
-        "~/testapi-1/" "oidc-client-1";
-        "~/testapi-2/" "oidc-client-2";
+        "~/testapi-1/" "[OIDC_CLIENT_NAME_HERE]";
+        "~/testapi-2/" "[OIDC_CLIENT_NAME_HERE]";
         default "empty";
     }
     
@@ -36,8 +36,8 @@ data:
     }
     
     map $uri $oidc_client_secret {
-        "~/testapi-1/" "6b00fb90-3125-44bf-a46f-251936d948ce";
-        "~/testapi-2/" "592fdd17-221f-4677-93e3-b28018233354";
+        "~/testapi-1/" "[OIDC_CLIENT_SECRET_HERE]";
+        "~/testapi-2/" "[OIDC_CLIENT_SECRET_HERE]";
         default "empty";
     }
     
@@ -53,9 +53,16 @@ data:
     
     map $uri $oidc_hmac_key {
         # This should be unique for every NGINX instance/cluster
-        default "24o8ugerlkvsjm43iumfoidsjklfjs";
+        default "[UNIQUE_HMAC_KEY_HERE]";
     }
-    
+
+    # Per-URI allowed HTTP methods, blank delimited
+    map $uri $apigw_allowed_http_methods {
+        "~/testapi-1/" "GET POST";
+        "~/testapi-2/" "GET DELETE";
+        default 0;
+    }
+
     map $proto $oidc_cookie_flags {
         http  "Path=/; SameSite=lax;"; # For HTTP/plaintext testing
         https "Path=/; SameSite=lax; HttpOnly; Secure;"; # Production recommendation
@@ -64,7 +71,6 @@ data:
     map $http_x_forwarded_port $redirect_base {
         ""      $proto://$host:$server_port;
         default $proto://$host:$http_x_forwarded_port;
-        #default https://$host:443;
     }
     
     map $http_x_forwarded_proto $proto {
@@ -81,10 +87,10 @@ data:
     # Change timeout values to at least the validity period of each token type
     #keyval_zone zone=oidc_id_tokens:1M state=conf.d/oidc_id_tokens.json timeout=1h;
     #keyval_zone zone=refresh_tokens:1M state=conf.d/refresh_tokens.json timeout=8h;
-    #keyval_zone zone=oidc_id_tokens:1M state=/tmp/oidc_id_tokens.json timeout=1h;
-    #keyval_zone zone=refresh_tokens:1M state=/tmp/refresh_tokens.json timeout=8h;
-    keyval_zone zone=oidc_id_tokens:1M state=/var/cache/nginx/oidc_id_tokens.json timeout=1h;
-    keyval_zone zone=refresh_tokens:1M state=/var/cache/nginx/refresh_tokens.json timeout=8h;
+    #keyval_zone zone=oidc_id_tokens:1M state=/var/cache/nginx/oidc_id_tokens.json timeout=1h;
+    #keyval_zone zone=refresh_tokens:1M state=/var/cache/nginx/refresh_tokens.json timeout=8h;
+    keyval_zone zone=oidc_id_tokens:1M state=/var/tmp/oidc_id_tokens.json timeout=1h;
+    keyval_zone zone=refresh_tokens:1M state=/var/tmp/refresh_tokens.json timeout=8h;
     keyval_zone zone=oidc_pkce:128K timeout=90s; # Temporary storage for PKCE code verifier.
     
     keyval $cookie_auth_token $session_jwt zone=oidc_id_tokens;   # Exchange cookie for JWT
