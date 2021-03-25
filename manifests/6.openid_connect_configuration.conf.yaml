@@ -11,23 +11,23 @@ data:
     # the $host variable is used as the default input parameter but can be changed.
     #
     map $uri $oidc_authz_endpoint {
-        "~/testapi-1/" "https://idp-1.ff.lan/auth/realms/master/protocol/openid-connect/auth";
-        "~/testapi-2/" "https://idp-2.ff.lan/auth/realms/master/protocol/openid-connect/auth";
+        "~/testapi-1/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/auth";
+        "~/testapi-2/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/auth";
     }
     
     map $uri $oidc_token_endpoint {
-        "~/testapi-1/" "https://idp-1.ff.lan/auth/realms/master/protocol/openid-connect/token";
-        "~/testapi-2/" "https://idp-2.ff.lan/auth/realms/master/protocol/openid-connect/token";
+        "~/testapi-1/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/token";
+        "~/testapi-2/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/token";
     }
     
     map $uri $oidc_jwt_keyfile {
-        "~/testapi-1/" "https://idp-1.ff.lan/auth/realms/master/protocol/openid-connect/certs";
-        "~/testapi-2/" "https://idp-2.ff.lan/auth/realms/master/protocol/openid-connect/certs";
+        "~/testapi-1/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/certs";
+        "~/testapi-2/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/certs";
     }
     
     map $uri $oidc_client {
-        "~/testapi-1/" "[OIDC_CLIENT_NAME_HERE]";
-        "~/testapi-2/" "[OIDC_CLIENT_NAME_HERE]";
+        "~/testapi-1/" "NGINX-Plus";
+        "~/testapi-2/" "testapi-2";
         default "empty";
     }
     
@@ -36,8 +36,8 @@ data:
     }
     
     map $uri $oidc_client_secret {
-        "~/testapi-1/" "[OIDC_CLIENT_SECRET_HERE]";
-        "~/testapi-2/" "[OIDC_CLIENT_SECRET_HERE]";
+        "~/testapi-1/" "6b00fb90-3125-44bf-a46f-251936d948ce";
+        "~/testapi-2/" "592fdd17-221f-4677-93e3-b28018233354";
         default "empty";
     }
     
@@ -53,16 +53,22 @@ data:
     
     map $uri $oidc_hmac_key {
         # This should be unique for every NGINX instance/cluster
-        default "[UNIQUE_HMAC_KEY_HERE]";
+        default "24o8ugerlkvsjm43iumfoidsjklfjs";
     }
 
-    # Per-URI allowed HTTP methods, blank delimited
+    # Per-URI allowed HTTP methods
     map $uri $apigw_allowed_http_methods {
-        "~/testapi-1/" "GET POST";
-        "~/testapi-2/" "GET DELETE";
+        "~/testapi-1/" "GET";
+        "~/testapi-2/" "DELETE";
         default 0;
     }
 
+    # URI rewriting
+    map $uri $rewritten_uri {
+        "/testapi-1/tasks-external" "/testapi-1/tasks";
+        default "";
+    }
+    
     map $proto $oidc_cookie_flags {
         http  "Path=/; SameSite=lax;"; # For HTTP/plaintext testing
         https "Path=/; SameSite=lax; HttpOnly; Secure;"; # Production recommendation
@@ -71,6 +77,7 @@ data:
     map $http_x_forwarded_port $redirect_base {
         ""      $proto://$host:$server_port;
         default $proto://$host:$http_x_forwarded_port;
+        #default https://$host:443;
     }
     
     map $http_x_forwarded_proto $proto {

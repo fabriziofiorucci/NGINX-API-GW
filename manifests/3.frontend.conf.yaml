@@ -51,7 +51,7 @@ data:
             }
             #
 
-            proxy_pass http://$app_name; # The backend site/app
+            proxy_pass http://$app_name$rewritten_uri; # The backend site/app
             
             access_log /var/log/nginx/frontend-access.log main_jwt;
         }

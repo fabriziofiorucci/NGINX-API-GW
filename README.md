@@ -24,8 +24,9 @@ http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
 - [X] per-URI/per-REST API function HTTP method filtering
+- [X] URI rewriting support
 
-- [ ] URI rewriting support
+- [ ] rate limiting
 - [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
 - [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on external keyval backend
 
