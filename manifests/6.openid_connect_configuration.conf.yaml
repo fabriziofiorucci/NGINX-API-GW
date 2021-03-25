@@ -11,23 +11,23 @@ data:
     # the $host variable is used as the default input parameter but can be changed.
     #
     map $uri $oidc_authz_endpoint {
-        "~/testapi-1/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/auth";
-        "~/testapi-2/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/auth";
+        "~/testapi-1/" "https://idp-1.ff.lan/auth/realms/master/protocol/openid-connect/auth";
+        "~/testapi-2/" "https://idp-2.ff.lan/auth/realms/master/protocol/openid-connect/auth";
     }
     
     map $uri $oidc_token_endpoint {
-        "~/testapi-1/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/token";
-        "~/testapi-2/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/token";
+        "~/testapi-1/" "https://idp-1.ff.lan/auth/realms/master/protocol/openid-connect/token";
+        "~/testapi-2/" "https://idp-2.ff.lan/auth/realms/master/protocol/openid-connect/token";
     }
     
     map $uri $oidc_jwt_keyfile {
-        "~/testapi-1/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/certs";
-        "~/testapi-2/" "https://sso.ff.lan/auth/realms/master/protocol/openid-connect/certs";
+        "~/testapi-1/" "https://idp-1.ff.lan/auth/realms/master/protocol/openid-connect/certs";
+        "~/testapi-2/" "https://idp-2.ff.lan/auth/realms/master/protocol/openid-connect/certs";
     }
     
     map $uri $oidc_client {
-        "~/testapi-1/" "NGINX-Plus";
-        "~/testapi-2/" "testapi-2";
+        "~/testapi-1/" "[OIDC_CLIENT_NAME_HERE]";
+        "~/testapi-2/" "[OIDC_CLIENT_NAME_HERE]";
         default "empty";
     }
     
@@ -36,8 +36,8 @@ data:
     }
     
     map $uri $oidc_client_secret {
-        "~/testapi-1/" "6b00fb90-3125-44bf-a46f-251936d948ce";
-        "~/testapi-2/" "592fdd17-221f-4677-93e3-b28018233354";
+        "~/testapi-1/" "[OIDC_CLIENT_SECRET_HERE]";
+        "~/testapi-2/" "[OIDC_CLIENT_SECRET_HERE]";
         default "empty";
     }
     
@@ -53,7 +53,7 @@ data:
     
     map $uri $oidc_hmac_key {
         # This should be unique for every NGINX instance/cluster
-        default "24o8ugerlkvsjm43iumfoidsjklfjs";
+        default "[UNIQUE_HMAC_KEY_HERE]";
     }
 
     # Per-URI allowed HTTP methods - blank delimited
