@@ -1,4 +1,4 @@
-# NGINX Plus API Gateway - Advanced OIDC setup
+# NGINX Plus API Gateway
 
 ## Description
 
