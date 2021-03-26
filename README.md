@@ -77,7 +77,7 @@ By default this repo creates a "nginx-apigw" namespace where everything is deplo
 
 - Move to the manifest dir
 ```
-cd manifests
+cd manifests-map
 ```
 
 - Perform a full cleanup
