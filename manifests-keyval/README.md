@@ -124,6 +124,9 @@ curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_hmacs -
 
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_logout_redirect -d '{"/testapi-1/":"[THIS_API_LOGOUT_URI]"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_logout_redirect -d '{"/testapi-2/":"[THIS_API_LOGOUT_URI]"}'
+
+curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http_methods -d '{"/testapi-1/":"GET"}'
+curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http_methods -d '{"/testapi-2/":"GET POST"}'
 ```
 
 ### Test!

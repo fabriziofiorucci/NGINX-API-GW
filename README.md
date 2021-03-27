@@ -9,8 +9,8 @@ The original deployment guide focuses on FQDN-based OIDC IdP selection, this rep
 This supports deployments where all published REST APIs share a common FQDN (ie. http(s)://api.ff.lan/) and must be handled based on the first URI token, that is:
 
 ```
-http://api.ff.lan/testapi-1/getCustomer -> this gets authenticated by IdP #1
-http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
+http://api.ff.lan/testapi-1/tasks -> this gets authenticated by IdP #1
+http://api.ff.lan/testapi-2/tasks -> this gets authenticated by IdP #2
 ```
 
 ## Prerequisites
