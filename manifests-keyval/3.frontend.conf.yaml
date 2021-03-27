@@ -1,0 +1,60 @@
+apiVersion: v1                                       
+kind: ConfigMap                                      
+metadata:                                            
+  name: frontend-conf
+  namespace: nginx-apigw
+data:                                                
+  frontend.conf: |-
+    # This is the backend application we are protecting with OpenID Connect
+    upstream testapi-1 {
+        zone testapi-1 64k;
+        server testapi-1.nginx-apigw.svc.cluster.local:5000;
+    }
+
+    upstream testapi-2 {
+        zone testapi-2 64k;
+        server testapi-2.nginx-apigw.svc.cluster.local:5000;
+    }
+
+    # Custom log format to include the 'sub' claim in the REMOTE_USER field
+    log_format main_jwt '$remote_addr - $jwt_claim_sub [$time_local] "$request" $status '
+                        '$body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"';
+    
+    # The frontend server - reverse proxy with OpenID Connect authentication
+    #
+    server {
+        include conf.d/openid_connect.server_conf; # Authorization code flow and Relying Party processing
+        error_log /var/log/nginx/error.log debug;  # Reduce severity level as required
+    
+        listen 80; # Use SSL/TLS in production
+        server_name api.ff.lan;
+        
+        location "~/(.*)/(.*)$" {
+            set $app_name $1;
+            # This site is protected with OpenID Connect
+            auth_jwt "" token=$session_jwt;
+            #error_page 401 = @do_oidc_flow;
+            error_page 401 = /$1/do_oidc_flow;
+    
+            #auth_jwt_key_file $oidc_jwt_keyfile; # Enable when using filename
+            auth_jwt_key_request /$1/_jwks_uri; # Enable when using URL
+    
+            # Successfully authenticated users are proxied to the backend,
+            # with 'sub' claim passed as HTTP header
+            proxy_set_header username $jwt_claim_sub;
+
+            # HTTP Method check
+            if ( $apigw_allowed_http_methods ) {
+              access_by_lua_block {
+                if not string.match(ngx.var.apigw_allowed_http_methods,ngx.var.request_method) then
+                  ngx.exit(ngx.HTTP_FORBIDDEN);
+                end
+              }
+            }
+            #
+
+            proxy_pass http://$app_name$rewritten_uri; # The backend site/app
+            
+            access_log /var/log/nginx/frontend-access.log main_jwt;
+        }
+    }

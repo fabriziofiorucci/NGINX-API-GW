@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-apigw
+  namespace: nginx-apigw
+  labels:
+    app: nginx-apigw
+spec:
+  selector:
+    matchLabels:
+      app: nginx-apigw
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-apigw
+    spec:
+      containers:
+      - name: nginx-apigw
+        image: registry.ff.lan/nginxplus-js-lua
+        ports:
+        - containerPort: 80
+        - containerPort: 8080
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: nginx-default-conf
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        - name: frontend-conf
+          mountPath: /etc/nginx/conf.d/frontend.conf
+          subPath: frontend.conf
+        - name: openid-connect-js
+          mountPath: /etc/nginx/conf.d/openid_connect.js
+          subPath: openid_connect.js
+        - name: openid-connect-server-conf
+          mountPath: /etc/nginx/conf.d/openid_connect.server_conf
+          subPath: openid_connect.server_conf
+        - name: openid-connect-configuration-conf
+          mountPath: /etc/nginx/conf.d/openid_connect_configuration.conf
+          subPath: openid_connect_configuration.conf
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+      - name: nginx-default-conf
+        configMap:
+          name: nginx-default-conf
+      - name: frontend-conf
+        configMap:
+          name: frontend-conf
+      - name: openid-connect-js
+        configMap:
+          name: openid-connect-js
+      - name: openid-connect-server-conf
+        configMap:
+          name: openid-connect-server-conf
+      - name: openid-connect-configuration-conf
+        configMap:
+          name: openid-connect-configuration-conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-apigw
+  namespace: nginx-apigw
+  labels:
+    app: nginx-apigw
+spec:
+  ports:
+  - name: http
+    port: 80
+  - name: api
+    port: 8080
+  selector:
+    app: nginx-apigw
+  type: ClusterIP
+
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: nginx-apigw-nodeport
+#  namespace: nginx-apigw
+#  labels:
+#    app: nginx-apigw
+#spec:
+#  ports:
+#  - name: http
+#    port: 80
+#    nodePort: 30180
+#  - name: api
+#    port: 8080
+#    nodePort: 30181
+#  selector:
+#    app: nginx-apigw
+#  type: NodePort
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-apigw
+  namespace: nginx-apigw
+  annotations:
+    nginx.org/proxy-connect-timeout: "30s"
+    nginx.org/proxy-read-timeout: "20s"
+    nginx.org/client-max-body-size: "4m"
+    nginx.com/health-checks: "true"
+    #kubernetes.io/ingress.class: "nginx"
+  labels:
+    app: nginx-apigw
+spec:
+  rules:
+    - host: api.ff.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-apigw
+                port:
+                  number: 80
+    - host: api
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-apigw
+                port:
+                  number: 8080
