@@ -35,4 +35,4 @@ http://api.ff.lan/testapi-2/getCustomer -> this gets authenticated by IdP #2
 ## Deployment types
 
 - [Based on NGINX maps](manifests-map)
-- [Based on NGINX keyval zones and REST APIs](manifests-map)
+- [Based on NGINX keyval zones and REST APIs](manifests-keyval)
