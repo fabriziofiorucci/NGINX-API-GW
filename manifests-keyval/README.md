@@ -77,7 +77,7 @@ kubectl apply -f 1.sample_apis.yaml
 kubectl apply -f 2.nginx.conf.yaml 
 ```
 
-- NGINX-to-upstreams configuration
+- NGINX-to-upstreams configuration: the "upstream" section must point to API services 
 ```
 kubectl apply -f 3.frontend.conf.yaml
 ```
