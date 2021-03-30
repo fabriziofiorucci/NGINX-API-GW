@@ -78,26 +78,6 @@ spec:
     app: nginx-apigw
   type: ClusterIP
 
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: nginx-apigw-nodeport
-#  namespace: nginx-apigw
-#  labels:
-#    app: nginx-apigw
-#spec:
-#  ports:
-#  - name: http
-#    port: 80
-#    nodePort: 30180
-#  - name: api
-#    port: 8080
-#    nodePort: 30181
-#  selector:
-#    app: nginx-apigw
-#  type: NodePort
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -109,7 +89,6 @@ metadata:
     nginx.org/proxy-read-timeout: "20s"
     nginx.org/client-max-body-size: "4m"
     nginx.com/health-checks: "true"
-    #kubernetes.io/ingress.class: "nginx"
   labels:
     app: nginx-apigw
 spec:
@@ -124,13 +103,3 @@ spec:
                 name: nginx-apigw
                 port:
                   number: 80
-    - host: api
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx-apigw
-                port:
-                  number: 8080
