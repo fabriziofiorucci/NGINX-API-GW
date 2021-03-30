@@ -25,11 +25,11 @@ http://api.ff.lan/testapi-2/tasks -> this gets authenticated by IdP #2
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
 - [X] per-URI/per-REST API function HTTP method filtering
+- [X] per-REST API function quota
 - [X] URI rewriting support
 
 - [ ] rate limiting
-- [ ] per-REST API function quota
-- [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on external key-value backend
+- [ ] per-URI OIDC IdP selection (endpoints, client id, client key) based on external backend
 - [ ] ...
 
 ## Deployment types

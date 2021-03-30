@@ -5,7 +5,7 @@ metadata:
   namespace: nginx-apigw
 data:                                                
   frontend.conf: |-
-    # This is the backend application we are protecting with OpenID Connect
+    # These are the backend applications we are publishing as an API Gateway
     # Each upstream name must be equal to the "uri" token configured in 6.openid_connect_configuration.conf.yaml
     upstream testapi-1 {
         zone testapi-1 64k;

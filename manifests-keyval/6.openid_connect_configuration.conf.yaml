@@ -67,6 +67,15 @@ data:
         ""      $scheme;
         default $http_x_forwarded_proto;
     }
+
+    ### REST API Quota management
+
+    # Quotas set based on URI + "Consumer" HTTP Header
+    keyval_zone zone=quotas_enabled:1M sync state=/var/tmp/quotas_enabled.json type=prefix timeout=32d;
+    keyval $uri $quota_enabled zone=quotas_enabled;
+
+    keyval_zone zone=quotas:1M sync state=/var/tmp/quotas.json type=string timeout=32d;
+    keyval $http_consumer:$uri $quota_remaining zone=quotas;
     
     # ADVANCED CONFIGURATION BELOW THIS LINE
     # Additional advanced configuration (server context) in openid_connect.server_conf

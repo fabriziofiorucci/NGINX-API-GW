@@ -4,6 +4,12 @@
 
 This version relies on NGINX "maps" for configuration. When maps are updated, the NGINX deployment shall be restarted
 
+## Current and upcoming features
+
+- [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
+- [X] per-URI/per-REST API function HTTP method filtering
+- [X] URI rewriting support
+
 ## How to deploy
 
 ### Configure IdPs

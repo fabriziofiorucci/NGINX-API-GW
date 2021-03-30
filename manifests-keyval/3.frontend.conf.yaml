@@ -5,8 +5,8 @@ metadata:
   namespace: nginx-apigw
 data:                                                
   frontend.conf: |-
-    # This is the backend application we are protecting with OpenID Connect
-    # Each upstream name must be equal to the "uri" token configured through REST API on keyval_zones defined in 6.openid_connect_configuration.conf.yaml
+    # These are the backend applications we are publishing as an API Gateway  
+    # These upstream sections must be configured based on the actual URI prefix configured in keyval_zone zones
     upstream testapi-1 {
         zone testapi-1 64k;
         server testapi-1.nginx-apigw.svc.cluster.local:5000;
@@ -39,7 +39,8 @@ data:
     
             #auth_jwt_key_file $oidc_jwt_keyfile; # Enable when using filename
             auth_jwt_key_request /$1/_jwks_uri; # Enable when using URL
-    
+
+
             # Successfully authenticated users are proxied to the backend,
             # with 'sub' claim passed as HTTP header
             proxy_set_header username $jwt_claim_sub;
@@ -52,10 +53,35 @@ data:
                 end
               }
             }
-            #
+
+            # Quota check
+            if ( $quota_enabled ) {
+              access_by_lua_block {
+                if ngx.var.quota_remaining == nil then
+                  ngx.exit(ngx.HTTP_FORBIDDEN);
+                end
+
+                local q=tonumber(ngx.var.quota_remaining);
+
+                if q < 1 then
+                  -- ngx.exit(ngx.HTTP_FORBIDDEN);
+                  ngx.exit(429);
+                else
+                  ngx.var.quota_remaining=tostring(q-1);
+                end
+              }
+            }
+
+            add_header X-Quota-Remaining $quota_remaining always;
 
             proxy_pass http://$app_name$rewritten_uri; # The backend site/app
             
             access_log /var/log/nginx/frontend-access.log main_jwt;
+        }
+ 
+        location @too_many_requests {
+            add_header Content-Type text/plain;
+            add_header X-Quota-Remaining $quota_remaining always;
+            return 429 "Quota exhausted\n";
         }
     }

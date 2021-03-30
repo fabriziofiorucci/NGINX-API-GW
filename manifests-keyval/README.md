@@ -4,6 +4,13 @@
 
 This version relies on NGINX keyval zones for configuration. Keyval zones can be fully managed through REST APIs
 
+## Current and upcoming features
+
+- [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
+- [X] per-URI/per-REST API function HTTP method filtering
+- [X] per-REST API function quota
+- [X] URI rewriting support
+
 ## How to deploy
 
 ### Configure IdPs
@@ -127,6 +134,9 @@ curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_logout_
 
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http_methods -d '{"/testapi-1/":"GET"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http_methods -d '{"/testapi-2/":"GET POST"}'
+
+curl -i -X POST -H "Host: api" -d '{"/testapi-1/":"1"}' http://api.ff.lan/api/6/http/keyvals/quotas_enabled
+curl -i -X POST -H "Host: api" -d '{"foo:/testapi-1/tasks":5}' http://api.ff.lan/api/6/http/keyvals/quotas
 ```
 
 ### Test!
@@ -134,4 +144,5 @@ curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http
 ```
 curl -i -X GET http://api.ff.lan/testapi-1/tasks
 curl -i -X GET http://api.ff.lan/testapi-2/tasks
+curl -i -X GET -H "Consumer: foo" http://api.ff.lan/testapi-1/tasks
 ```
