@@ -64,7 +64,6 @@ data:
                 local q=tonumber(ngx.var.quota_remaining);
 
                 if q < 1 then
-                  -- ngx.exit(ngx.HTTP_FORBIDDEN);
                   ngx.exit(429);
                 else
                   ngx.var.quota_remaining=tostring(q-1);

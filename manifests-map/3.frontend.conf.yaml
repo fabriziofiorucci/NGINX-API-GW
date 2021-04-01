@@ -50,7 +50,25 @@ data:
                 ngx.exit(ngx.HTTP_FORBIDDEN);
               end
             }
-            #
+
+            # Quota check
+            if ( $quota_enabled ) {
+              access_by_lua_block {
+                if ngx.var.quota_remaining == nil then
+                  ngx.exit(ngx.HTTP_FORBIDDEN);
+                end
+
+                local q=tonumber(ngx.var.quota_remaining);
+
+                if q < 1 then
+                  ngx.exit(429);
+                else
+                  ngx.var.quota_remaining=tostring(q-1);
+                end
+              }
+            }
+
+            add_header X-Quota-Remaining $quota_remaining always;
 
             proxy_pass http://$app_name$rewritten_uri; # The backend site/app
             

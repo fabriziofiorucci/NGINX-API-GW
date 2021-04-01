@@ -84,6 +84,18 @@ data:
         ""      $scheme;
         default $http_x_forwarded_proto;
     }
+
+    ### REST API Quota management
+
+    # Quotas set based on URI + "Consumer" HTTP Header
+    map $uri $quota_enabled {
+        "/testapi-1/" "1";
+        default "";
+    }
+
+    map $http_consumer:$uri $quota_remaining {
+        "foo:/testapi-1/tasks" "5";
+    }
     
     # ADVANCED CONFIGURATION BELOW THIS LINE
     # Additional advanced configuration (server context) in openid_connect.server_conf

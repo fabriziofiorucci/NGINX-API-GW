@@ -20,6 +20,19 @@ http://api.ff.lan/testapi-2/tasks -> this gets authenticated by IdP #2
 - at least one OIDC IdP (like Keycloak, Okta, MS ADFS, etc)
 - the NGINX Plus image must be built with support for javascript (nginx-plus-module-njs) and lua (nginx-plus-module-lua)
 
+## Building the NGINX Plus image
+
+```
+cd nginx-dockerfile
+```
+
+copy your nginx-repo.crt and nginx-repo.key to the local dir
+
+```
+docker build --no-cache -t YOUR_PRIVATE_REGISTRY/nginxplus-js-lua:TAG .
+docker push YOUR_PRIVATE_REGISTRY/nginxplus-js-lua:TAG
+```
+
 ## Current and upcoming features
 
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
