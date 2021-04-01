@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nginx-apigw
-        image: registry.ff.lan/nginxplus:latest
+        image: YOUR_PRIVATE_REGISTRY/nginxplus-js-lua:TAG
         ports:
         - containerPort: 80
         volumeMounts:
