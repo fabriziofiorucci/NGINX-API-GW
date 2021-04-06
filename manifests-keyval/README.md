@@ -111,33 +111,71 @@ kubectl apply -f 7.nginx-apigw.yaml
 
 - Populate required keyval_zones through NGINX REST API
 
+- AuthZ endpoints
+
 ```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_authz_endpoints -d '{"/testapi-1/":"https://sso.ff.lan/auth/realms/master/protocol/openid-connect/auth"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_authz_endpoints -d '{"/testapi-2/":"https://sso.ff.lan/auth/realms/master/protocol/openid-connect/auth"}'
+```
 
+- Token endpoints
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_token_endpoints -d '{"/testapi-1/":"https://sso.ff.lan/auth/realms/master/protocol/openid-connect/token"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_token_endpoints -d '{"/testapi-2/":"https://sso.ff.lan/auth/realms/master/protocol/openid-connect/token"}'
+```
 
+- JWT key endpoints
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_jwt_keyfiles -d '{"/testapi-1/":"https://sso.ff.lan/auth/realms/master/protocol/openid-connect/certs"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_jwt_keyfiles -d '{"/testapi-2/":"https://sso.ff.lan/auth/realms/master/protocol/openid-connect/certs"}'
+```
 
+- OIDC client IDs
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_clients -d '{"/testapi-1/":"[THIS_API_OIDC_CLIENT_ID]"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_clients -d '{"/testapi-2/":"[THIS_API_OIDC_CLIENT_ID]"}'
+```
 
+- OIDC client secrets
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_client_secrets -d '{"/testapi-1/":"[OIDC CLIENT SECRET_GOES_HERE]"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_client_secrets -d '{"/testapi-2/":"[OIDC_CLIENT_SECRET_GOES_HERE]"}'
+```
 
+- Per-NGINX Plus Unique HMAC
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_hmacs -d '{"/":"[PER_NGINX_CLUSTER_UNIQUE_HMAC]"}'
+```
 
+- Logout URIs
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_logout_redirect -d '{"/testapi-1/":"[THIS_API_LOGOUT_URI]"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/oidc_logout_redirect -d '{"/testapi-2/":"[THIS_API_LOGOUT_URI]"}'
+```
 
+- Allowed HTTP methods (if not defined, all methods are allowed)
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http_methods -d '{"/testapi-1/":"GET"}'
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/allowed_http_methods -d '{"/testapi-2/":"GET POST"}'
+```
 
+- REST API quotas: quotas must be enabled (set to 1) per URI-token, then per-Consumer quota shall be set (in the example: Consumer 'foo' can call 5 times the /testapi-1/tasks service)
+
+```
 curl -i -X POST -H "Host: api" -d '{"/testapi-1/":"1"}' http://api.ff.lan/api/6/http/keyvals/quotas_enabled
 curl -i -X POST -H "Host: api" -d '{"foo:/testapi-1/tasks":5}' http://api.ff.lan/api/6/http/keyvals/quotas
+```
 
+- URI rewriting: client requests for /testapi-1/tasks-external are rewritten to /testapi-1/tasks towards the backend
+
+```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"/testapi-1/tasks"}'
 ```
 
