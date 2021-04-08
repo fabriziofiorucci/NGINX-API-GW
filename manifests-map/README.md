@@ -8,6 +8,7 @@ This version relies on NGINX "maps" for configuration. When maps are updated, th
 
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
 - [X] per-URI/per-REST API function HTTP method filtering
+- [X] per-REST API function quota
 - [X] URI rewriting support
 
 ## How to deploy

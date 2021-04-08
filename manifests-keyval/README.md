@@ -179,6 +179,12 @@ curl -i -X POST -H "Host: api" -d '{"foo:/testapi-1/tasks":5}' http://api.ff.lan
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"/testapi-1/tasks"}'
 ```
 
+- URI rewriting: client requests for /testapi-1/tasks-external are rewritten to another 3rd party endpoint
+
+```
+curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"https://new-fqdn.com/api/service"}'
+```
+
 ### Test!
 
 ```

@@ -31,7 +31,7 @@ data:
         server_name api.ff.lan;
         
         location "~/(.*)/(.*)$" {
-            set $app_name $1;
+            set $app_name http://$1;
             # This site is protected with OpenID Connect
             auth_jwt "" token=$session_jwt;
             #error_page 401 = @do_oidc_flow;
@@ -70,7 +70,11 @@ data:
 
             add_header X-Quota-Remaining $quota_remaining always;
 
-            proxy_pass http://$app_name$rewritten_uri; # The backend site/app
+            if ( $rewritten_uri ) {
+              set $app_name $rewritten_uri;
+            }
+
+            proxy_pass $app_name;
             
             access_log /var/log/nginx/frontend-access.log main_jwt;
         }

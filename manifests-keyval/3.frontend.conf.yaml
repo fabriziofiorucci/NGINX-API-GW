@@ -5,8 +5,7 @@ metadata:
   namespace: nginx-apigw
 data:                                                
   frontend.conf: |-
-    # These are the backend applications we are publishing as an API Gateway  
-    # These upstream sections must be configured based on the actual URI prefix configured in keyval_zone zones
+    # This is the backend application we are protecting with OpenID Connect
     upstream testapi-1 {
         zone testapi-1 64k;
         server testapi-1.nginx-apigw.svc.cluster.local:5000;
@@ -31,7 +30,7 @@ data:
         server_name api.ff.lan;
         
         location "~/(.*)/(.*)$" {
-            set $app_name $1;
+            set $app_name http://$1;
             # This site is protected with OpenID Connect
             auth_jwt "" token=$session_jwt;
             #error_page 401 = @do_oidc_flow;
@@ -64,6 +63,7 @@ data:
                 local q=tonumber(ngx.var.quota_remaining);
 
                 if q < 1 then
+                  -- ngx.exit(ngx.HTTP_FORBIDDEN);
                   ngx.exit(429);
                 else
                   ngx.var.quota_remaining=tostring(q-1);
@@ -73,7 +73,11 @@ data:
 
             add_header X-Quota-Remaining $quota_remaining always;
 
-            proxy_pass http://$app_name$rewritten_uri; # The backend site/app
+            if ( $rewritten_uri ) {
+              set $app_name $rewritten_uri;
+            }
+
+            proxy_pass $app_name;
             
             access_log /var/log/nginx/frontend-access.log main_jwt;
         }
