@@ -176,7 +176,7 @@ curl -i -X POST -H "Host: api" -d '{"foo:/testapi-1/tasks":5}' http://api.ff.lan
 - URI rewriting: client requests for /testapi-1/tasks-external are rewritten to /testapi-1/tasks towards the backend
 
 ```
-curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"/testapi-1/tasks"}'
+curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"/testapi-1/testapi-1/tasks"}'
 ```
 
 - URI rewriting: client requests for /testapi-1/tasks-external are rewritten to another 3rd party endpoint

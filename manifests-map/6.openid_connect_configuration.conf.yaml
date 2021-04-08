@@ -65,7 +65,7 @@ data:
 
     # URI rewriting
     map $uri $rewritten_uri {
-        "/testapi-1/tasks-external" "/testapi-1/tasks";
+        "/testapi-1/tasks-external" "/testapi-1/testapi-1/tasks";
     #    "/testapi-1/tasks-external" "https://new-fqdn.com/api/service";
         default "";
     }
