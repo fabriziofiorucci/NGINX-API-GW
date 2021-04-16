@@ -186,12 +186,6 @@ curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite 
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"https://new-fqdn.com/api/service"}'
 ```
 
-- CORS Access-Control-Allow-Origin: CORS HTTP header is added to responses for client requests for /testapi-1/
-
-```
-curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/cors_access_control_allow_origin -d '{"/testapi-1/":"http://www.myorigin.com"}'
-```
-
 ### Test!
 
 ```
