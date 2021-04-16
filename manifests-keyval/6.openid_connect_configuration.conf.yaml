@@ -44,10 +44,13 @@ data:
     keyval_zone zone=oidc_hmacs:1M state=/var/tmp/oidc_hmacs.json type=prefix;
     keyval $uri $oidc_hmac_key zone=oidc_hmacs;
 
-
     # Per-URI allowed HTTP methods - blank delimited
     keyval_zone zone=allowed_http_methods:1M state=/var/tmp/allowed_http_methods.json type=prefix;
     keyval $uri $apigw_allowed_http_methods zone=allowed_http_methods;
+
+    # Optional CORS Access-Control-Allow-Origin header
+    keyval_zone zone=cors_access_control_allow_origin:1M state=/var/tmp/cors_access_control_allow_origin.json type=prefix;
+    keyval $uri $apigw_cors_access_control_allow_origin zone=cors_access_control_allow_origin;
 
     # URI rewriting
     keyval_zone zone=uri_rewrite:1M state=/var/tmp/uri_rewrite.json type=string;

@@ -9,6 +9,7 @@ This version relies on NGINX keyval zones for configuration. Keyval zones can be
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
 - [X] per-URI/per-REST API function HTTP method filtering
 - [X] per-REST API function quota
+- [X] per-REST API CORS Access-Control-Allow-Origin
 - [X] URI rewriting support
 
 ## How to deploy
@@ -183,6 +184,12 @@ curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite 
 
 ```
 curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/uri_rewrite -d '{"/testapi-1/tasks-external":"https://new-fqdn.com/api/service"}'
+```
+
+- CORS Access-Control-Allow-Origin: CORS HTTP header is added to responses for client requests for /testapi-1/
+
+```
+curl -i -X POST -H "Host: api" http://api.ff.lan/api/6/http/keyvals/cors_access_control_allow_origin -d '{"/testapi-1/":"http://www.myorigin.com"}'
 ```
 
 ### Test!
