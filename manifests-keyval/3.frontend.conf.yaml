@@ -72,7 +72,7 @@ data:
             }
 
             add_header X-Quota-Remaining $quota_remaining always;
-            add_header Access-Control-Allow-Origin $apigw_cors_access_control_allow_origin always;
+            #add_header Access-Control-Allow-Origin $apigw_cors_access_control_allow_origin always;
 
             if ( $rewritten_uri ) {
               set $app_name $rewritten_uri;

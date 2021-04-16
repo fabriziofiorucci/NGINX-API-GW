@@ -39,7 +39,7 @@ docker push YOUR_PRIVATE_REGISTRY/nginxplus-js-lua:TAG
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
 - [X] per-URI/per-REST API function HTTP method filtering
 - [X] per-REST API function quota
-- [X] per-REST API CORS Access-Control-Allow-Origin
+- [ ] per-REST API CORS Access-Control-Allow-Origin
 - [X] URI rewriting support
 
 ## Deployment types
