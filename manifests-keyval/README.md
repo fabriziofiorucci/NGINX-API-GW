@@ -9,7 +9,6 @@ This version relies on NGINX keyval zones for configuration. Keyval zones can be
 - [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
 - [X] per-URI/per-REST API function HTTP method filtering
 - [X] per-REST API function quota
-- [ ] per-REST API CORS Access-Control-Allow-Origin
 - [X] URI rewriting support
 
 ## How to deploy
