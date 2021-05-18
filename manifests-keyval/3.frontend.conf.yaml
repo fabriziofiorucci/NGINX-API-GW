@@ -29,15 +29,16 @@ data:
         listen 80; # Use SSL/TLS in production
         server_name api.ff.lan;
         
-        location "~/(.*)/(.*)$" {
-            set $app_name http://$1;
+        #location "~/(.*)/(.*)$" {
+        location ~ /(?<uri_token>[^/]+)/ {
+            set $app_name http://$uri_token;
             # This site is protected with OpenID Connect
             auth_jwt "" token=$session_jwt;
             #error_page 401 = @do_oidc_flow;
-            error_page 401 = /$1/do_oidc_flow;
+            error_page 401 = /$uri_token/do_oidc_flow;
     
             #auth_jwt_key_file $oidc_jwt_keyfile; # Enable when using filename
-            auth_jwt_key_request /$1/_jwks_uri; # Enable when using URL
+            auth_jwt_key_request /$uri_token/_jwks_uri; # Enable when using URL
 
 
             # Successfully authenticated users are proxied to the backend,
