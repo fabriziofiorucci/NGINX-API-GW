@@ -4,7 +4,7 @@
 
 This code is based on https://docs.nginx.com/nginx/deployment-guides/single-sign-on/
 
-The original deployment guide focuses on FQDN-based OIDC IdP selection, this repository provides a number of changes and enhancements to support dynamic multiple IdPs based on the URI (map-based setup) and FQDN + URI (keyval-based setup), authorization and rewriting.
+The original deployment guide focuses on FQDN-based OIDC IdP selection, this repository provides a number of changes and enhancements to support dynamic multiple IdPs based on the URI (map-based setup) and FQDN + URI (keyval-based setup), authorization and URI rewriting.
 
 This supports deployments where all published REST APIs share a common FQDN (ie. http(s)://api.ff.lan/) and must be handled based on the first URI token, that is:
 
