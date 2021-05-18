@@ -48,7 +48,8 @@ metadata:
 data:
   default.conf: |-
     server {
-      listen 8080 default_server;
+      #listen 8080 default_server;
+      listen 8080;
       server_name api;
 
       location /api/ {

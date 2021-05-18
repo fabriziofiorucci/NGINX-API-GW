@@ -6,12 +6,12 @@ metadata:
 data:                                                
   frontend.conf: |-
     # This is the backend application we are protecting with OpenID Connect
-    upstream testapi-1 {
+    upstream api.ff.lan-testapi-1 {
         zone testapi-1 64k;
         server testapi-1.nginx-apigw.svc.cluster.local:5000;
     }
 
-    upstream testapi-2 {
+    upstream api.ff.lan-testapi-2 {
         zone testapi-2 64k;
         server testapi-2.nginx-apigw.svc.cluster.local:5000;
     }
@@ -26,20 +26,18 @@ data:
         include conf.d/openid_connect.server_conf; # Authorization code flow and Relying Party processing
         error_log /var/log/nginx/error.log debug;  # Reduce severity level as required
     
-        listen 80; # Use SSL/TLS in production
-        server_name api.ff.lan;
+        listen 80 default_server; # Use SSL/TLS in production
+	#server_name api.ff.lan;
+        server_name _;
         
-        #location "~/(.*)/(.*)$" {
-        location ~ /(?<uri_token>[^/]+)/ {
-            set $app_name http://$uri_token;
+        location ~ /(?<app_name>[^/]+)/ {
             # This site is protected with OpenID Connect
             auth_jwt "" token=$session_jwt;
             #error_page 401 = @do_oidc_flow;
-            error_page 401 = /$uri_token/do_oidc_flow;
+            error_page 401 = /$app_name/do_oidc_flow;
     
             #auth_jwt_key_file $oidc_jwt_keyfile; # Enable when using filename
-            auth_jwt_key_request /$uri_token/_jwks_uri; # Enable when using URL
-
+            auth_jwt_key_request /$app_name/_jwks_uri; # Enable when using URL
 
             # Successfully authenticated users are proxied to the backend,
             # with 'sub' claim passed as HTTP header
@@ -79,7 +77,7 @@ data:
               set $app_name $rewritten_uri;
             }
 
-            proxy_pass $app_name;
+            proxy_pass http://$host-$app_name;
             
             access_log /var/log/nginx/frontend-access.log main_jwt;
         }

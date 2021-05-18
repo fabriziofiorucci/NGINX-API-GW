@@ -4,7 +4,7 @@
 
 This code is based on https://docs.nginx.com/nginx/deployment-guides/single-sign-on/
 
-The original deployment guide focuses on FQDN-based OIDC IdP selection, this repository provides a number of changes and enhancements to support dynamic multiple IdPs based on the URI, authorization and rewriting.
+The original deployment guide focuses on FQDN-based OIDC IdP selection, this repository provides a number of changes and enhancements to support dynamic multiple IdPs based on the URI (map-based setup) and FQDN + URI (keyval-based setup), authorization and rewriting.
 
 This supports deployments where all published REST APIs share a common FQDN (ie. http(s)://api.ff.lan/) and must be handled based on the first URI token, that is:
 
@@ -35,10 +35,10 @@ docker push YOUR_PRIVATE_REGISTRY/nginxplus-js-lua:TAG
 
 ## Current and upcoming features
 
-- [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "maps"
-- [X] per-URI OIDC IdP selection (endpoints, client id, client key) based on NGINX "keyval_zone"
-- [X] per-URI/per-REST API function HTTP method filtering
-- [X] per-REST API function quota
+- [X] per-URI OIDC IdP selection (endpoints, client id, client key, ...) based on NGINX "maps"
+- [X] per-FQDN/URI OIDC IdP selection (endpoints, client id, client key, ...) based on NGINX "keyval_zone"
+- [X] per-FQDN/URI / per-REST API function HTTP method filtering
+- [X] per-FQDN/URI REST API function quota
 - [X] URI rewriting support
 
 ## Deployment types

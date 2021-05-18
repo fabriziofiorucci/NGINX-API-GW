@@ -9,19 +9,19 @@ data:
 
     # OIDC AuthZ endpoints
     keyval_zone zone=oidc_authz_endpoints:1M state=/var/tmp/oidc_authz_endpoints.json type=prefix;
-    keyval $uri $oidc_authz_endpoint zone=oidc_authz_endpoints;
+    keyval $host:$uri $oidc_authz_endpoint zone=oidc_authz_endpoints;
     
     # OIDC token endpoints
     keyval_zone zone=oidc_token_endpoints:1M state=/var/tmp/oidc_token_endpoints.json type=prefix;
-    keyval $uri $oidc_token_endpoint zone=oidc_token_endpoints;
+    keyval $host:$uri $oidc_token_endpoint zone=oidc_token_endpoints;
     
     # OIDC endpoint to fetch jwt keyfiles
     keyval_zone zone=oidc_jwt_keyfiles:1M state=/var/tmp/oidc_jwt_keyfiles.json type=prefix;
-    keyval $uri $oidc_jwt_keyfile zone=oidc_jwt_keyfiles;
+    keyval $host:$uri $oidc_jwt_keyfile zone=oidc_jwt_keyfiles;
 
     # OIDC client ids    
     keyval_zone zone=oidc_clients:1M state=/var/tmp/oidc_clients.json type=prefix;
-    keyval $uri $oidc_client zone=oidc_clients;
+    keyval $host:$uri $oidc_client zone=oidc_clients;
     
     map $uri $oidc_pkce_enable {
         default 0;
@@ -29,32 +29,32 @@ data:
 
     # OIDC client secret
     keyval_zone zone=oidc_client_secrets:1M state=/var/tmp/oidc_client_secrets.json type=prefix;
-    keyval $uri $oidc_client_secret zone=oidc_client_secrets;
+    keyval $host:$uri $oidc_client_secret zone=oidc_client_secrets;
     
-    map $uri $oidc_scopes {
+    map $host:$uri $oidc_scopes {
         default "openid+profile+email+offline_access";
     }
     
     # Where to send browser after requesting /logout location. This can be
     # replaced with a custom logout page, or complete URL.
     keyval_zone zone=oidc_logout_redirect:1M state=/var/tmp/oidc_logout_redirect.json type=prefix;
-    keyval $uri $oidc_logout_redirect zone=oidc_logout_redirect;
+    keyval $host:$uri $oidc_logout_redirect zone=oidc_logout_redirect;
     
     # OIDC hmac key - This should be unique for every NGINX instance/cluster
     keyval_zone zone=oidc_hmacs:1M state=/var/tmp/oidc_hmacs.json type=prefix;
-    keyval $uri $oidc_hmac_key zone=oidc_hmacs;
+    keyval $host:$uri $oidc_hmac_key zone=oidc_hmacs;
 
     # Per-URI allowed HTTP methods - blank delimited
     keyval_zone zone=allowed_http_methods:1M state=/var/tmp/allowed_http_methods.json type=prefix;
-    keyval $uri $apigw_allowed_http_methods zone=allowed_http_methods;
+    keyval $host:$uri $apigw_allowed_http_methods zone=allowed_http_methods;
 
     # Optional CORS Access-Control-Allow-Origin header
     keyval_zone zone=cors_access_control_allow_origin:1M state=/var/tmp/cors_access_control_allow_origin.json type=prefix;
-    keyval $uri $apigw_cors_access_control_allow_origin zone=cors_access_control_allow_origin;
+    keyval $host:$uri $apigw_cors_access_control_allow_origin zone=cors_access_control_allow_origin;
 
     # URI rewriting
     keyval_zone zone=uri_rewrite:1M state=/var/tmp/uri_rewrite.json type=string;
-    keyval $uri $rewritten_uri zone=uri_rewrite;
+    keyval $host:$uri $rewritten_uri zone=uri_rewrite;
 
     map $proto $oidc_cookie_flags {
         http  "Path=/; SameSite=lax;"; # For HTTP/plaintext testing
@@ -75,10 +75,10 @@ data:
 
     # Quotas set based on URI + "Consumer" HTTP Header
     keyval_zone zone=quotas_enabled:1M sync state=/var/tmp/quotas_enabled.json type=prefix timeout=32d;
-    keyval $uri $quota_enabled zone=quotas_enabled;
+    keyval $host:$uri $quota_enabled zone=quotas_enabled;
 
     keyval_zone zone=quotas:1M sync state=/var/tmp/quotas.json type=string timeout=32d;
-    keyval $http_consumer:$uri $quota_remaining zone=quotas;
+    keyval $http_consumer:$host:$uri $quota_remaining zone=quotas;
     
     # ADVANCED CONFIGURATION BELOW THIS LINE
     # Additional advanced configuration (server context) in openid_connect.server_conf
